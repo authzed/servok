@@ -1,0 +1,12 @@
+#!/usr/bin/env -S buf generate . --template
+version: "v1"
+plugins:
+  - name: "go"
+    out: "."
+    opt: "paths=source_relative"
+  - name: "go-grpc"
+    out: "."
+    opt: "paths=source_relative"
+  - name: "validate"
+    out: "."
+    opt: "paths=source_relative,lang=go"
