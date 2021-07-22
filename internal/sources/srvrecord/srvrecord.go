@@ -11,7 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"google.golang.org/protobuf/proto"
 
-	v1 "github.com/REDACTED/code/servok/api/v1"
+	v1 "github.com/REDACTED/code/servok/internal/proto/servok/api/v1"
 	"github.com/REDACTED/code/servok/internal/sources"
 )
 

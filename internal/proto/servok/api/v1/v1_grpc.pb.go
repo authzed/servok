@@ -124,5 +124,5 @@ var EndpointService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "v1/v1.proto",
+	Metadata: "servok/api/v1/v1.proto",
 }

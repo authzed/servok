@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	v1 "github.com/REDACTED/code/servok/api/v1"
+	v1 "github.com/REDACTED/code/servok/internal/proto/servok/api/v1"
 )
 
 func TestMultiplexingAndCleanup(t *testing.T) {
