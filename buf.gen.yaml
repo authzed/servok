@@ -7,3 +7,6 @@ plugins:
   - name: "go-grpc"
     out: "internal/proto"
     opt: "paths=source_relative"
+  - name: "validate"
+    out: "internal/proto"
+    opt: "paths=source_relative,lang=go"

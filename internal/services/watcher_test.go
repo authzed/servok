@@ -33,7 +33,7 @@ func TestMultiplexingAndCleanup(t *testing.T) {
 			updateChan := make(chan []*v1.Endpoint)
 			ctx, cancel := context.WithCancel(context.Background())
 
-			servicer := &endpointServicer{
+			watcher := &watcher{
 				shutdownCtx: ctx,
 			}
 
@@ -41,12 +41,12 @@ func TestMultiplexingAndCleanup(t *testing.T) {
 			for i := 0; i < 5; i++ {
 				clientChan := make(chan *v1.WatchResponse)
 				clientChans = append(clientChans, clientChan)
-				servicer.clients = append(servicer.clients, &clientInfo{updateChannel: clientChan})
+				watcher.clients = append(watcher.clients, &clientInfo{updateChannel: clientChan})
 			}
 
 			exited := false
 			go func() {
-				servicer.run(updateChan)
+				watcher.run(updateChan)
 				exited = true
 			}()
 

@@ -30,6 +30,7 @@ func NewSrvRecordSource(shutdownCtx context.Context, service, proto, name string
 
 	updateChan := make(chan []*v1.Endpoint)
 
+	log.Info().Stringer("period", updatePeriod).Str("service", service).Str("proto", proto).Str("name", name).Msg("starting DNS SRV endpoint source")
 	go run(shutdownCtx, updateChan, resolver, updatePeriod)
 
 	return updateChan, nil
@@ -42,7 +43,6 @@ func run(ctx context.Context,
 
 	defer close(updates)
 
-	log.Info().Stringer("period", updatePeriod).Msg("starting DNS SRV endpoint source")
 	ticker := time.NewTicker(updatePeriod)
 
 	stop := false

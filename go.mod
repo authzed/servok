@@ -4,6 +4,8 @@ go 1.16
 
 require (
 	github.com/authzed/grpcutil v0.0.0-20210709212005-3a705ca91827
+	github.com/envoyproxy/protoc-gen-validate v0.1.0
+	github.com/golang/protobuf v1.5.2
 	github.com/google/go-cmp v0.5.6
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/zerolog/v2 v2.0.0-rc.2

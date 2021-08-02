@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/authzed/grpcutil"
 	grpcmw "github.com/grpc-ecosystem/go-grpc-middleware"
@@ -28,7 +27,6 @@ import (
 
 	v1 "github.com/REDACTED/code/servok/internal/proto/servok/api/v1"
 	"github.com/REDACTED/code/servok/internal/services"
-	"github.com/REDACTED/code/servok/internal/sources/srvrecord"
 )
 
 func main() {
@@ -47,7 +45,6 @@ func main() {
 	rootCmd.Flags().String("grpc-key-path", "", "local path to the TLS key used to serve gRPC services")
 	rootCmd.Flags().Bool("grpc-no-tls", false, "serve unencrypted gRPC services")
 	rootCmd.Flags().String("metrics-addr", ":9090", "address to listen on for serving metrics and profiles")
-	rootCmd.Flags().String("dns-srv-domain", "", "domain for which to resolve SRV records")
 
 	cobrautil.RegisterZeroLogFlags(rootCmd.Flags())
 
@@ -87,13 +84,7 @@ func rootRun(cmd *cobra.Command, args []string) {
 		healthpb.HealthCheckResponse_SERVING,
 	)
 
-	domain := cobrautil.MustGetString(cmd, "dns-srv-domain")
-	endpointSource, err := srvrecord.NewSrvRecordSource(ctx, "", "", domain, 1*time.Second)
-	if err != nil {
-		log.Fatal().Err(err).Msg("unable to initialize endpoint source")
-	}
-
-	servicer, err := services.NewEndpointServicer(ctx, endpointSource)
+	servicer, err := services.NewEndpointServicer(ctx)
 	if err != nil {
 		log.Fatal().Err(err).Msg("unable to initialize servicer")
 	}
