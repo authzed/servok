@@ -14,6 +14,7 @@ import (
 	grpcmw "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpczerolog "github.com/grpc-ecosystem/go-grpc-middleware/providers/zerolog/v2"
 	grpclog "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/validator"
 	grpcprom "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/jzelinskie/cobrautil"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -59,6 +60,7 @@ func rootRun(cmd *cobra.Command, args []string) {
 		otelgrpc.UnaryServerInterceptor(),
 		grpcprom.UnaryServerInterceptor,
 		grpclog.UnaryServerInterceptor(grpczerolog.InterceptorLogger(log.Logger)),
+		validator.UnaryServerInterceptor(),
 	))
 
 	var grpcServer *grpc.Server

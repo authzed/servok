@@ -27,9 +27,6 @@ type endpointServicer struct {
 }
 
 func (es *endpointServicer) Watch(request *v1.WatchRequest, stream v1.EndpointService_WatchServer) error {
-	if err := request.Validate(); err != nil {
-		return status.Errorf(codes.InvalidArgument, "invalid watch request: %s", err)
-	}
 	log.Info().Str("dnsName", request.DnsName).Msg("client connected")
 
 	updateChannel := make(chan *v1.WatchResponse)
@@ -56,9 +53,14 @@ func (es *endpointServicer) Watch(request *v1.WatchRequest, stream v1.EndpointSe
 		}
 		es.watchers[request.DnsName] = watcherForName
 
+		// We need to be holding the lock before we kick off the watcher to prevent getting
+		// messages out of order and having the watcher mutate its client list before we can
+		// insert our client.
 		watcherForName.Lock()
 		go watcherForName.run(source)
 	} else {
+		// Here we take the lock to match the invariant that we hold the lock before
+		// leaving the if statement.
 		watcherForName.Lock()
 	}
 

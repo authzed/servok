@@ -4,9 +4,10 @@ import (
 	"context"
 	"sync"
 
+	"github.com/rs/zerolog/log"
+
 	v1 "github.com/REDACTED/code/servok/internal/proto/servok/api/v1"
 	"github.com/REDACTED/code/servok/internal/sources"
-	"github.com/rs/zerolog/log"
 )
 
 type clientInfo struct {
