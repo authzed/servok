@@ -59,15 +59,17 @@ func (es *endpointServicer) Watch(request *v1.WatchRequest, stream v1.EndpointSe
 		watcherForName.Lock()
 		go watcherForName.run(source)
 	} else {
+		// Since this watcher was already established, send the last response
+		if err := stream.Send(watcherForName.lastResponse); err != nil {
+			log.Info().Err(err).Str("dnsName", request.DnsName).Msg("client disconnected")
+			finalStatus = status.Errorf(codes.Canceled, "attempted to write to closed client stream")
+		}
+
 		// Here we take the lock to match the invariant that we hold the lock before
 		// leaving the if statement.
 		watcherForName.Lock()
 	}
 
-	if err := stream.Send(watcherForName.lastResponse); err != nil {
-		log.Info().Err(err).Str("dnsName", request.DnsName).Msg("client disconnected")
-		finalStatus = status.Errorf(codes.Canceled, "attempted to write to closed client stream")
-	}
 	watcherForName.clients = append(watcherForName.clients, info)
 	watcherForName.Unlock()
 	es.Unlock()

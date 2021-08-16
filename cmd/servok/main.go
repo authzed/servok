@@ -104,12 +104,14 @@ func rootRun(cmd *cobra.Command, args []string) {
 		grpcServer.Serve(l)
 	}()
 
-	metricsrv := NewMetricsServer(cobrautil.MustGetString(cmd, "metrics-addr"))
+	metricsAddr := cobrautil.MustGetString(cmd, "metrics-addr")
+	metricsrv := NewMetricsServer(metricsAddr)
 	go func() {
 		if err := metricsrv.ListenAndServe(); err != http.ErrServerClosed {
 			log.Fatal().Err(err).Msg("failed while serving metrics")
 		}
 	}()
+	log.Info().Str("addr", metricsAddr).Msg("metrics server started listening")
 
 	signalctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	<-signalctx.Done()
