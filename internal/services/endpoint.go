@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -27,7 +28,15 @@ type endpointServicer struct {
 }
 
 func (es *endpointServicer) Watch(request *v1.WatchRequest, stream v1.EndpointService_WatchServer) error {
-	log.Info().Str("dnsName", request.DnsName).Msg("client connected")
+	// TODO switch on multiple source types
+	srvRequest := request.GetSrv()
+
+	qualifiedName := fmt.Sprintf("_%s._%s.%s",
+		srvRequest.Service,
+		srvRequest.Protocol,
+		srvRequest.DnsName,
+	)
+	log.Info().Str("dnsName", qualifiedName).Msg("client connected")
 
 	updateChannel := make(chan *v1.WatchResponse)
 	info := &clientInfo{updateChannel: updateChannel}
@@ -36,13 +45,19 @@ func (es *endpointServicer) Watch(request *v1.WatchRequest, stream v1.EndpointSe
 	es.Lock()
 
 	// Find a watcher for this dnsName
-	watcherForName, ok := es.watchers[request.DnsName]
+	watcherForName, ok := es.watchers[qualifiedName]
 	if !ok {
-		// TODO make the source type and polling period configurable, (or in the request?)
-		source, err := srvrecord.NewSrvRecordSource(es.shutdownCtx, "", "", request.DnsName, 1*time.Second)
+		// TODO make the polling period configurable, (or in the request?)
+		source, err := srvrecord.NewSrvRecordSource(
+			es.shutdownCtx,
+			srvRequest.Service,
+			srvRequest.Protocol,
+			srvRequest.DnsName,
+			1*time.Second,
+		)
 		if err != nil {
 			es.Unlock()
-			log.Info().Str("dnsName", request.DnsName).Msg("client disconnected")
+			log.Info().Str("dnsName", qualifiedName).Msg("client disconnected")
 			return status.Errorf(codes.InvalidArgument, "unable to initialize endpoint source: %s", err)
 		}
 
@@ -51,7 +66,7 @@ func (es *endpointServicer) Watch(request *v1.WatchRequest, stream v1.EndpointSe
 			shutdownCtx:  es.shutdownCtx,
 			lastResponse: &v1.WatchResponse{},
 		}
-		es.watchers[request.DnsName] = watcherForName
+		es.watchers[qualifiedName] = watcherForName
 
 		// We need to be holding the lock before we kick off the watcher to prevent getting
 		// messages out of order and having the watcher mutate its client list before we can
@@ -61,7 +76,7 @@ func (es *endpointServicer) Watch(request *v1.WatchRequest, stream v1.EndpointSe
 	} else {
 		// Since this watcher was already established, send the last response
 		if err := stream.Send(watcherForName.lastResponse); err != nil {
-			log.Info().Err(err).Str("dnsName", request.DnsName).Msg("client disconnected")
+			log.Info().Err(err).Str("dnsName", qualifiedName).Msg("client disconnected")
 			finalStatus = status.Errorf(codes.Canceled, "attempted to write to closed client stream")
 		}
 
@@ -81,11 +96,11 @@ func (es *endpointServicer) Watch(request *v1.WatchRequest, stream v1.EndpointSe
 				finalStatus = status.Errorf(codes.Internal, "attempted to read from closed update channel")
 			}
 			if err := stream.Send(update); err != nil {
-				log.Info().Err(err).Str("dnsName", request.DnsName).Msg("client disconnected")
+				log.Info().Err(err).Str("dnsName", qualifiedName).Msg("client disconnected")
 				finalStatus = status.Errorf(codes.Canceled, "attempted to write to closed client stream")
 			}
 		case <-stream.Context().Done():
-			log.Info().Str("dnsName", request.DnsName).Msg("client disconnected cleanly")
+			log.Info().Str("dnsName", qualifiedName).Msg("client disconnected cleanly")
 			finalStatus = status.Errorf(codes.Canceled, "client disconnected")
 		case <-es.shutdownCtx.Done():
 			finalStatus = status.Errorf(codes.Unavailable, "server disconnected")
