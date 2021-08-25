@@ -14,7 +14,7 @@ RUN go mod download
 COPY ./ /go/src/servok
 RUN go build ./cmd/servok/
 
-FROM alpine:3.14.0
+FROM alpine:3.14.1
 COPY --from=build /go/bin/grpc_health_probe /usr/local/bin/
 COPY --from=build /go/src/servok/servok /usr/local/bin/
 CMD ["servok"]
