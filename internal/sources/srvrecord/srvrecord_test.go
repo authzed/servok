@@ -161,6 +161,12 @@ func TestRun(t *testing.T) {
 				}, 100*time.Millisecond, 1*time.Millisecond)
 			}
 
+			if tc.resolverErr != nil {
+				update, ok := <-updateChan
+				require.False(ok)
+				require.Nil(update)
+			}
+
 			cancel()
 
 			require.Eventually(func() bool {

@@ -94,6 +94,7 @@ func (es *endpointServicer) Watch(request *v1.WatchRequest, stream v1.EndpointSe
 		case update, ok := <-updateChannel:
 			if !ok {
 				finalStatus = status.Errorf(codes.Internal, "attempted to read from closed update channel")
+				break
 			}
 			if err := stream.Send(update); err != nil {
 				log.Info().Err(err).Str("dnsName", qualifiedName).Msg("client disconnected")

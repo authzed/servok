@@ -56,6 +56,7 @@ func run(ctx context.Context,
 			if err != nil {
 				log.Error().Err(err).Msg("error resolving DNS SRV endpoints")
 				stop = true
+				break
 			}
 			endpoints := rewriteAndSortAddrs(addrs)
 
