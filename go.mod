@@ -13,7 +13,7 @@ require (
 	github.com/jzelinskie/cobrautil v0.0.4
 	github.com/jzelinskie/stringz v0.0.1 // indirect
 	github.com/prometheus/client_golang v0.9.4
-	github.com/rs/zerolog v1.24.0
+	github.com/rs/zerolog v1.25.0
 	github.com/spf13/cobra v1.2.1
 	github.com/stretchr/testify v1.7.0
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.22.0
