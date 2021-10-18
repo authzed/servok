@@ -10,7 +10,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/zerolog/v2 v2.0.0-rc.2
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.0-rc.2
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
-	github.com/jzelinskie/cobrautil v0.0.4
+	github.com/jzelinskie/cobrautil v0.0.5
 	github.com/jzelinskie/stringz v0.0.1 // indirect
 	github.com/prometheus/client_golang v0.9.4
 	github.com/rs/zerolog v1.25.0

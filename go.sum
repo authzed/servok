@@ -222,8 +222,8 @@ github.com/jstemmer/go-junit-report v0.9.1/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/X
 github.com/jtolds/gls v4.20.0+incompatible h1:xdiiI2gbIgH/gLH7ADydsJ1uDOEzR8yvV7C0MuV77Wo=
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
-github.com/jzelinskie/cobrautil v0.0.4 h1:OIYfoDHVDvftmzmwsDjQzmnuozxd2LANcFti3aql+n4=
-github.com/jzelinskie/cobrautil v0.0.4/go.mod h1:svcV0pfy8vH8O+IpYaJgWw70PJuAtvoKXsIELG8Krzs=
+github.com/jzelinskie/cobrautil v0.0.5 h1:R78XJnCrlpcTRixsvkk2sZnvpUl2DU3pv3eAkf+ZNsU=
+github.com/jzelinskie/cobrautil v0.0.5/go.mod h1:svcV0pfy8vH8O+IpYaJgWw70PJuAtvoKXsIELG8Krzs=
 github.com/jzelinskie/stringz v0.0.1 h1:IahR+y8ct2nyj7B6i8UtFsGFj4ex1SX27iKFYsAheLk=
 github.com/jzelinskie/stringz v0.0.1/go.mod h1:hHYbgxJuNLRw91CmpuFsYEOyQqpDVFg8pvEh23vy4P0=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=
