@@ -1,0 +1,71 @@
+---
+name: "Build & Test"
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/build.yaml"
+      - "buf.gen.yaml"
+      - "Dockerfile"
+      - "go.mod"
+      - "go.sum"
+      - "cmd/**"
+      - "internal/**"
+      - "protos/**"
+  pull_request:
+    branches:
+      - "*"
+    paths:
+      - ".github/workflows/build.yaml"
+      - "buf.gen.yaml"
+      - "Dockerfile"
+      - "go.mod"
+      - "go.sum"
+      - "cmd/**"
+      - "internal/**"
+      - "protos/**"
+jobs:
+  test:
+    name: "Test"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-go@v2"
+        with:
+          go-version: "^1.17"
+      - name: "Build"
+        run: "go build ./cmd/..."
+      - name: "Test"
+        run: "go test ./..."
+      - name: "Full Datastore Integration Tests"
+        run: "go test -tags ci ./..."
+
+  protobuf:
+    name: "Generate Protobufs"
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v2"
+      - uses: "actions/setup-go@v2"
+        with:
+          go-version: "^1.17"
+      - name: "Install Go Protobuf plugins"
+        run: |
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.26
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1
+          go install github.com/envoyproxy/protoc-gen-validate@v0.6.1
+      - uses: "bufbuild/buf-setup-action@v0.6.0"
+        with:
+          version: "1.0.0-rc6"
+      - name: "Generate & Diff Protos"
+        run: "./buf.gen.yaml && git diff && bash -c '[ $(git status --porcelain | tee /dev/fd/2 | wc -c) -eq 0 ]'"
+      # Enable after initial build step is merged
+      # - uses: "bufbuild/buf-breaking-action@v1.0.0"
+      #   if: "github.event_name == 'pull_request'"
+      #   env:
+      #     BUF_INPUT_HTTPS_USERNAME: "${{ github.actor }}"
+      #     BUF_INPUT_HTTPS_PASSWORD: "${{ github.token }}"
+      #   with:
+      #     input: "protos/servok"
+      #     against: "https://github.com/authzed/servok.git#branch=main,subdir=protos/servok"
+      #     buf_token: "${{ secrets.BUF_REGISTRY_TOKEN }}"

@@ -1,5 +1,12 @@
-#!/usr/bin/env -S buf generate ../protos/servok --template
-version: "v1beta1"
+#!/usr/bin/env -S buf generate ./protos/servok --template
+---
+version: "v1"
+managed:
+  enabled: true
+  go_package_prefix:
+    default: "github.com/authzed/servok/api/v1"
+    except:
+      - "buf.build/envoyproxy/protoc-gen-validate"
 plugins:
   - name: "go"
     out: "internal/proto"
