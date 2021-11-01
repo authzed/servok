@@ -49,7 +49,7 @@ func main() {
 
 	cobrautil.RegisterZeroLogFlags(rootCmd.Flags())
 
-	rootCmd.Execute()
+	_ = rootCmd.Execute()
 }
 
 func rootRun(cmd *cobra.Command, args []string) {
@@ -68,7 +68,7 @@ func rootRun(cmd *cobra.Command, args []string) {
 		grpcServer = grpc.NewServer(sharedOptions...)
 	} else {
 		var err error
-		grpcServer, err = NewTlsGrpcServer(
+		grpcServer, err = NewTLSGrpcServer(
 			cobrautil.MustGetStringExpanded(cmd, "grpc-cert-path"),
 			cobrautil.MustGetStringExpanded(cmd, "grpc-key-path"),
 			sharedOptions...,
@@ -101,7 +101,7 @@ func rootRun(cmd *cobra.Command, args []string) {
 		}
 
 		log.Info().Str("addr", addr).Msg("gRPC server started listening")
-		grpcServer.Serve(l)
+		_ = grpcServer.Serve(l)
 	}()
 
 	metricsAddr := cobrautil.MustGetString(cmd, "metrics-addr")
@@ -140,7 +140,7 @@ func NewMetricsServer(addr string) *http.Server {
 	}
 }
 
-func NewTlsGrpcServer(certPath, keyPath string, opts ...grpc.ServerOption) (*grpc.Server, error) {
+func NewTLSGrpcServer(certPath, keyPath string, opts ...grpc.ServerOption) (*grpc.Server, error) {
 	if certPath == "" || keyPath == "" {
 		return nil, errors.New("missing one of required values: cert path, key path")
 	}
