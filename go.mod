@@ -1,4 +1,4 @@
-module github.com/REDACTED/code/servok
+module github.com/authzed/servok
 
 go 1.16
 

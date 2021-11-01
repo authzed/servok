@@ -26,8 +26,8 @@ import (
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 
-	v1 "github.com/REDACTED/code/servok/internal/proto/servok/api/v1"
-	"github.com/REDACTED/code/servok/internal/services"
+	v1 "github.com/authzed/servok/internal/proto/servok/api/v1"
+	"github.com/authzed/servok/internal/services"
 )
 
 func main() {

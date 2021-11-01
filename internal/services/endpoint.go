@@ -10,8 +10,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	v1 "github.com/REDACTED/code/servok/internal/proto/servok/api/v1"
-	"github.com/REDACTED/code/servok/internal/sources/srvrecord"
+	v1 "github.com/authzed/servok/internal/proto/servok/api/v1"
+	"github.com/authzed/servok/internal/sources/srvrecord"
 )
 
 func NewEndpointServicer(shutdownCtx context.Context) (v1.EndpointServiceServer, error) {

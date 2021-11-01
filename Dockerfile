@@ -6,7 +6,7 @@ RUN curl -Lo /go/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-he
 RUN chmod +x /go/bin/grpc_health_probe
 
 WORKDIR /go/src/servok
-RUN go env -w GOPRIVATE=github.com/REDACTED/code
+RUN go env -w GOPRIVATE=github.com/authzed/servok
 
 COPY ./go.mod ./go.sum .
 RUN go mod download

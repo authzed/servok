@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/testing/protocmp"
 
-	v1 "github.com/REDACTED/code/servok/internal/proto/servok/api/v1"
+	v1 "github.com/authzed/servok/internal/proto/servok/api/v1"
 )
 
 func TestRewriteAddrs(t *testing.T) {

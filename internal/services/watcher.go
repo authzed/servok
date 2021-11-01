@@ -6,8 +6,8 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	v1 "github.com/REDACTED/code/servok/internal/proto/servok/api/v1"
-	"github.com/REDACTED/code/servok/internal/sources"
+	v1 "github.com/authzed/servok/internal/proto/servok/api/v1"
+	"github.com/authzed/servok/internal/sources"
 )
 
 type clientInfo struct {
