@@ -1,0 +1,40 @@
+syntax = "proto3";
+package servok.api.v1;
+
+option go_package = "github.com/petricorp/code/servok/api/v1";
+
+import "validate/validate.proto";
+
+service EndpointService {
+  rpc Watch(WatchRequest) returns (stream WatchResponse) {}
+}
+
+message WatchRequest {
+  message SRVRequest {
+    string service = 1 [ (validate.rules).string = {
+      pattern : "^[a-z0-9]([a-z0-9-\\.]{0,251}[a-z0-9])?$",
+      max_bytes : 253,
+    } ];
+    string protocol = 2 [ (validate.rules).string = {
+      pattern : "^((tcp)|(udp))$",
+    } ];
+    string dns_name = 3 [ (validate.rules).string = {
+      pattern : "^[a-z0-9]([a-z0-9-\\.]{0,251}[a-z0-9])?$",
+      max_bytes : 253,
+    } ];
+  }
+
+  oneof request_type_oneof {
+    option (validate.required) = true;
+
+    SRVRequest srv = 1 [ (validate.rules).message.required = true ];
+  }
+}
+
+message WatchResponse { repeated Endpoint endpoints = 1; }
+
+message Endpoint {
+  string hostname = 1;
+  uint32 port = 2;
+  uint32 weight = 3;
+}
