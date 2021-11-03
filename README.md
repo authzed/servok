@@ -11,6 +11,8 @@ Servok is a service that provides endpoint metadata for client side load balanci
 
 See [CONTRIBUTING.md] for instructions on how to contribute and perform common tasks like building the project and running tests.
 
+[CONTRIBUTING.md]: CONTRIBUTING.md
+
 ## Getting Started
 
 ### Running Servok locally
