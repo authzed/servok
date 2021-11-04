@@ -1,0 +1,14 @@
+# vim: syntax=dockerfile
+FROM alpine AS servok-grpc
+ARG TARGETARCH
+ARG GRPC_HEALTH_PROBE_VERSION=0.3.6
+RUN apk update && \
+	apk add curl && \
+	curl -Lo /grpc_health_probe \
+	https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v$GRPC_HEALTH_PROBE_VERSION/grpc_health_probe-linux-$TARGETARCH && \
+	chmod +x /grpc_health_probe
+
+FROM gcr.io/distroless/base
+COPY --from=servok-grpc /grpc_health_probe /usr/local/bin/grpc_health_probe
+COPY servok /usr/local/bin/servok
+ENTRYPOINT ["servok"]

@@ -8,10 +8,10 @@ RUN chmod +x /go/bin/grpc_health_probe
 WORKDIR /go/src/servok
 RUN go env -w GOPRIVATE=github.com/authzed/servok
 
-COPY ./go.mod ./go.sum .
+COPY go.mod go.sum ./
 RUN go mod download
 
-COPY ./ /go/src/servok
+COPY . .
 RUN go build ./cmd/servok/
 
 FROM alpine:3.14.2
