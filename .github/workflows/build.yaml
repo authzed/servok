@@ -69,3 +69,8 @@ jobs:
       #     input: "protos/servok"
       #     against: "https://github.com/authzed/servok.git#branch=main,subdir=protos/servok"
       #     buf_token: "${{ secrets.BUF_REGISTRY_TOKEN }}"
+      # - uses: "bufbuild/buf-push-action@v1.0.0"
+      #   if: "github.event_name == 'push'"
+      #   with:
+      #     input: "./protos/servok"
+      #     buf_token: "${{ secrets.BUF_REGISTRY_TOKEN }}"

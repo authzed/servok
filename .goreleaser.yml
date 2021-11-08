@@ -22,9 +22,13 @@ nfpms:
       - "apk"
       - "deb"
       - "rpm"
+furies:
+  - account: "authzed"
+    secret_name: "GEMFURY_PUSH_TOKEN"
 dockers:
   - image_templates:
       - &amd_image "quay.io/authzed/servok:v{{ .Version }}-amd64"
+      - &amd_image_gh "ghcr.io/authzed/servok:v{{ .Version }}-amd64"
     dockerfile: &dockerfile "Dockerfile.release"
     goos: "linux"
     goarch: "amd64"
@@ -33,6 +37,7 @@ dockers:
       - "--platform=linux/amd64"
   - image_templates:
       - &arm_image "quay.io/authzed/servok:v{{ .Version }}-arm64"
+      - &arm_image_gh "ghcr.io/authzed/servok:v{{ .Version }}-arm64"
     dockerfile: *dockerfile
     goos: "linux"
     goarch: "arm64"
@@ -48,6 +53,14 @@ docker_manifests:
     image_templates:
       - *amd_image
       - *arm_image
+  - name_template: "ghcr.io/authzed/servok:v{{ .Version }}"
+    image_templates:
+      - *amd_image_gh
+      - *arm_image_gh
+  - name_template: "ghcr.io/authzed/servok:latest"
+    image_templates:
+      - *amd_image_gh
+      - *arm_image_gh
 checksum:
   name_template: "checksums.txt"
 snapshot:
