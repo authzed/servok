@@ -8,10 +8,10 @@ managed:
     except:
       - "buf.build/envoyproxy/protoc-gen-validate"
 plugins:
-  - name: "go"
+  - remote: "buf.build/library/plugins/go:v1.27.1-1"
     out: "internal/proto"
     opt: "paths=source_relative"
-  - name: "go-grpc"
+  - remote: "buf.build/library/plugins/go-grpc:v1.1.0-2"
     out: "internal/proto"
     opt: "paths=source_relative"
   - name: "validate"
