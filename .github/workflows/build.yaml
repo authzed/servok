@@ -56,18 +56,17 @@ jobs:
           version: "1.0.0-rc6"
       - name: "Generate & Diff Protos"
         run: "./buf.gen.yaml && git diff && bash -c '[ $(git status --porcelain | tee /dev/fd/2 | wc -c) -eq 0 ]'"
-      # Enable after initial build step is merged
-      # - uses: "bufbuild/buf-breaking-action@v1.0.0"
-      #   if: "github.event_name == 'pull_request'"
-      #   env:
-      #     BUF_INPUT_HTTPS_USERNAME: "${{ github.actor }}"
-      #     BUF_INPUT_HTTPS_PASSWORD: "${{ github.token }}"
-      #   with:
-      #     input: "protos/servok"
-      #     against: "https://github.com/authzed/servok.git#branch=main,subdir=protos/servok"
-      #     buf_token: "${{ secrets.BUF_REGISTRY_TOKEN }}"
-      # - uses: "bufbuild/buf-push-action@v1.0.0"
-      #   if: "github.event_name == 'push'"
-      #   with:
-      #     input: "./protos/servok"
-      #     buf_token: "${{ secrets.BUF_REGISTRY_TOKEN }}"
+      - uses: "bufbuild/buf-breaking-action@v1.0.0"
+        if: "github.event_name == 'pull_request'"
+        env:
+          BUF_INPUT_HTTPS_USERNAME: "${{ github.actor }}"
+          BUF_INPUT_HTTPS_PASSWORD: "${{ github.token }}"
+        with:
+          input: "protos/servok"
+          against: "https://github.com/authzed/servok.git#branch=main,subdir=protos/servok"
+          buf_token: "${{ secrets.BUF_REGISTRY_TOKEN }}"
+      - uses: "bufbuild/buf-push-action@v1.0.0"
+        if: "github.event_name == 'push'"
+        with:
+          input: "./protos/servok"
+          buf_token: "${{ secrets.BUF_REGISTRY_TOKEN }}"
