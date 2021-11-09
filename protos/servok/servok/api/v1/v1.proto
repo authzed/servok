@@ -1,8 +1,6 @@
 syntax = "proto3";
 package servok.api.v1;
 
-option go_package = "github.com/petricorp/code/servok/api/v1";
-
 import "validate/validate.proto";
 
 service EndpointService {

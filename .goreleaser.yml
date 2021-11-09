@@ -1,0 +1,75 @@
+---
+builds:
+  - main: "./cmd/servok"
+    env:
+      - "CGO_ENABLED=0"
+    goos:
+      - "linux"
+      - "windows"
+      - "darwin"
+    goarch:
+      - "amd64"
+      - "arm64"
+    mod_timestamp: "{{ .CommitTimestamp }}"
+nfpms:
+  - vendor: "authzed inc."
+    homepage: "https://github.com/authzed/servok"
+    maintainer: "authzed <support@authzed.com>"
+    description: "Serve endpoint metadata for client side load balancing"
+    license: "Apache 2.0"
+    epoch: 0
+    formats:
+      - "apk"
+      - "deb"
+      - "rpm"
+furies:
+  - account: "authzed"
+    secret_name: "GEMFURY_PUSH_TOKEN"
+dockers:
+  - image_templates:
+      - &amd_image "quay.io/authzed/servok:v{{ .Version }}-amd64"
+      - &amd_image_gh "ghcr.io/authzed/servok:v{{ .Version }}-amd64"
+    dockerfile: &dockerfile "Dockerfile.release"
+    goos: "linux"
+    goarch: "amd64"
+    use: "buildx"
+    build_flag_templates:
+      - "--platform=linux/amd64"
+  - image_templates:
+      - &arm_image "quay.io/authzed/servok:v{{ .Version }}-arm64"
+      - &arm_image_gh "ghcr.io/authzed/servok:v{{ .Version }}-arm64"
+    dockerfile: *dockerfile
+    goos: "linux"
+    goarch: "arm64"
+    use: "buildx"
+    build_flag_templates:
+      - "--platform=linux/arm64"
+docker_manifests:
+  - name_template: "quay.io/authzed/servok:v{{ .Version }}"
+    image_templates:
+      - *amd_image
+      - *arm_image
+  - name_template: "quay.io/authzed/servok:latest"
+    image_templates:
+      - *amd_image
+      - *arm_image
+  - name_template: "ghcr.io/authzed/servok:v{{ .Version }}"
+    image_templates:
+      - *amd_image_gh
+      - *arm_image_gh
+  - name_template: "ghcr.io/authzed/servok:latest"
+    image_templates:
+      - *amd_image_gh
+      - *arm_image_gh
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: "asc"
+release:
+  draft: true
+  prerelease: "auto"
+  footer: |
+    ## Docker Images
+    This release is available at `quay.io/authzed/servok:{{ .Version }}`
